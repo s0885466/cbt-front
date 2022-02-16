@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 const HtmlPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 const isProd = process.env.NODE_ENV === "production";
 const envPath = isProd ? "./.env.production" : "./.env";
@@ -12,6 +13,9 @@ module.exports = {
   target: "web",
   devtool: "source-map",
   entry: path.resolve(__dirname, "./src/index.tsx"),
+  resolve: {
+    extensions: [".js", ".jsx", ".tsx", ".ts"],
+  },
   module: {
     rules: [
       {
@@ -19,14 +23,11 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
-        test: /\.(jsx|tsx)$/,
+        test: /\.(jsx|tsx|ts)$/,
         exclude: /node_modules/,
         use: ["babel-loader"],
       },
     ],
-  },
-  resolve: {
-    extensions: ["*", ".js", ".jsx", ".tsx"],
   },
   output: {
     clean: true,
@@ -35,9 +36,16 @@ module.exports = {
     chunkFilename: "[id].[contenthash].js",
     path: path.resolve(__dirname, "./dist"),
   },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
+    splitChunks: {
+      chunks: "all",
+    },
+  },
   plugins: [
     new Dotenv({
-      path: envPath,
+      path: path.resolve(__dirname, envPath),
     }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlPlugin({
