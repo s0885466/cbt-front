@@ -7,7 +7,7 @@ import {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
 } from "react-router-dom";
-import Navigation from "../components/Navigation/Navigation";
+import Navigation from "@components/Navigation/Navigation";
 import { ROUTER_PATHS } from "./constants";
 
 const HomePage = lazy(() => import("../pages/HomePage/HomePage"));

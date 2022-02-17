@@ -8,6 +8,8 @@ const TerserPlugin = require("terser-webpack-plugin");
 const isProd = process.env.NODE_ENV === "production";
 const envPath = isProd ? "./.env.production" : "./.env";
 
+const resolvePath = (filePath) => path.resolve(__dirname, filePath);
+
 module.exports = {
   mode: process.env.NODE_ENV,
   target: "web",
@@ -15,6 +17,9 @@ module.exports = {
   entry: path.resolve(__dirname, "./src/index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".tsx", ".ts"],
+    alias: {
+      "@components": resolvePath("src/components"),
+    },
   },
   module: {
     rules: [
