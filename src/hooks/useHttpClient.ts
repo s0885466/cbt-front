@@ -15,9 +15,10 @@ export const useHttpClient = () => {
         return response.data;
       } catch (err) {
         const error = err as AxiosError;
-        const errorMessage =
-          JSON.parse(error.request.responseText).message ||
-          (err as Error)?.message;
+
+        const errorMessage = error?.request?.responseText
+          ? JSON.parse(error?.request?.responseText).message
+          : (err as Error)?.message;
 
         setError(errorMessage);
         setIsLoading(false);

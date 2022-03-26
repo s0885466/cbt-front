@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AuthService } from "@src/services/AuthService";
+import { ROUTER_PATHS } from "@src/Router/routerPaths";
 
 const $api = axios.create({
   withCredentials: true,
@@ -7,8 +8,9 @@ const $api = axios.create({
 });
 
 $api.interceptors.request.use((config) => {
-  if (config?.headers) {
-    config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+  const token = localStorage.getItem("token");
+  if (config?.headers && token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
   return config;
@@ -28,8 +30,13 @@ $api.interceptors.response.use(
 
         return $api.request(originalRequest);
       } catch (err) {
-        window.location.replace("http://yandex.ru");
+        window.location.replace(ROUTER_PATHS.REGISTRATION);
       }
+    }
+
+    if (error.response.status === 403) {
+      window.location.pathname !== ROUTER_PATHS.REGISTRATION &&
+        window.location.replace(ROUTER_PATHS.REGISTRATION);
     }
   }
 );
