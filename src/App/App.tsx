@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from "react";
+import { ChakraProvider, Flex } from "@chakra-ui/react";
 import {
   BrowserRouter,
   Routes,
@@ -9,9 +10,10 @@ import {
 } from "react-router-dom";
 import Navigation from "@components/Navigation/Navigation";
 import { ROUTER_PATHS } from "./constants";
+import { Layout } from "@components/index";
 
 const HomePage = lazy(() => import("../pages/HomePage/HomePage"));
-const Signin = lazy(() => import("../pages/Signin/Signin"));
+const Signin = lazy(() => import("../pages/Registration/Registration"));
 
 const App = () => {
   const isAuthorized = Boolean(window.localStorage.getItem("token"));
@@ -29,10 +31,16 @@ const App = () => {
   );
 
   return (
-    <BrowserRouter>
-      <Navigation />
-      <Suspense fallback={<div>Загрузка...</div>}>{routes}</Suspense>
-    </BrowserRouter>
+    <ChakraProvider>
+      <BrowserRouter>
+        <Layout>
+          <Flex direction="column" h="100vh">
+            <Navigation />
+            <Suspense fallback={<div>Загрузка...</div>}>{routes}</Suspense>
+          </Flex>
+        </Layout>
+      </BrowserRouter>
+    </ChakraProvider>
   );
 };
 
